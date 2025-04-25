@@ -56,7 +56,7 @@ public class UserService {
                 signupRequest.getEmail(), signupRequest.getPassword()
         );
 
-        String token = jwtTokenProvider.generateToken(user.getEmail());
+        String token = jwtTokenProvider.generateToken(authentication);
         return token;
 
 
