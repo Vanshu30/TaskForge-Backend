@@ -1,29 +1,17 @@
-# Use Maven image to build the app
-FROM maven:3.9.4-eclipse-temurin-17 AS build
+# Use a base Java image
+FROM openjdk:17-jdk-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy pom and download dependencies (for cache efficiency)
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
+# Copy the JAR file (adjust name if needed)
+COPY target/*.jar app.jar
 
-# Copy the source code
-COPY src ./src
+# Set environment variable for the port
+ENV PORT 8080
 
-# Package the application
-RUN mvn clean package -DskipTests
-
-# Now use a smaller image to run the app
-FROM eclipse-temurin:17-jdk-jammy
-
-WORKDIR /app
-
-# Copy built jar from previous image
-COPY --from=build /app/target/*.jar app.jar
-
-# Expose port
+# Expose the port (optional but good practice)
 EXPOSE 8080
 
-# Run the app
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Start the application (bind to PORT)
+CMD ["sh", "-c", "java -jar app.jar --server.port=$PORT"]
