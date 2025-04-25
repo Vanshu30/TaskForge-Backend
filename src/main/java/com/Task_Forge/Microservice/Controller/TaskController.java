@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://taskforge-frontend.onrender.com")
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
