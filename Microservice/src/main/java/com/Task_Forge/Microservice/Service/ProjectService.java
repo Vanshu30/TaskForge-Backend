@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.List;
 
 @Service
 public class ProjectService {
@@ -32,6 +33,10 @@ public class ProjectService {
 
         return projectRepository.save(project);
     }
+    public List<Project> getAllProjects() {
+        return projectRepository.findAll();
+    }
+
 
     public Project getProjectById(UUID projectId){
         return projectRepository.findById(projectId)

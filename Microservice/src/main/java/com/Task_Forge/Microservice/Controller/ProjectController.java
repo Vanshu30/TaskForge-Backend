@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,4 +29,11 @@ public class ProjectController {
     public ResponseEntity<Project> getProject(@PathVariable UUID id){
         return ResponseEntity.ok(projectService.getProjectById(id));
     }
+
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Project>> getAllProjects() {
+        return ResponseEntity.ok(projectService.getAllProjects());
+    }
+
 }

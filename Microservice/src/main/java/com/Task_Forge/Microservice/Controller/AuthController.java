@@ -45,29 +45,31 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest){
         try {
-            if (signupRequest.getName() == null || signupRequest.getEmail() == null || signupRequest.getPassword() == null) {
+            if (signupRequest.getName() == null || signupRequest.getEmail() == null || signupRequest.getPassword() == null || signupRequest.getUsername() == null) {
                 return ResponseEntity.badRequest().body("All fields are required");
             }
 
             User user = new User();
             user.setName(signupRequest.getName());
             user.setEmail(signupRequest.getEmail());
+            user.setUsername(signupRequest.getUsername());
 
             // 🔐 Hash the password before saving
             String hashedPassword = passwordEncoder.encode(signupRequest.getPassword());
             user.setPassword(hashedPassword);
 
-            // Optionally set role or other details
-            Role role = new Role();
-            user.setRole(RoleType.ADMIN);
-
+            // ✅ Correctly set enum value from request
+            RoleType role = signupRequest.getRole() != null ? signupRequest.getRole() : RoleType.USER;
+            user.setRole(role);
 
 
             userRepository.save(user);
             return ResponseEntity.ok("registration success");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("User registration failed");
+            e.printStackTrace(); // For development; replace with proper logger in prod
+            return ResponseEntity.status(500).body("User registration failed: " + e.getMessage());
         }
+
     }
 
 

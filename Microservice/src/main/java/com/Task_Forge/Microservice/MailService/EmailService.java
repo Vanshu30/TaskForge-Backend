@@ -68,7 +68,7 @@ public class EmailService {
                                        String eventName, String eventDate,
                                        String eventTime, String location) {
         String inviteToken = generateOTP();  // Unique token
-        String rsvpLink = "https://yourapp.com/rsvp?token=" + inviteToken;
+        String rsvpLink = "https://localhost:8080/invite/rsvp?token=" + inviteToken;
         LocalDateTime expiryTime = LocalDateTime.now().plusDays(7);
 
         invitationStorage.put(inviteToken, new InvitationDetails(recipientEmail, organizationName, eventName,

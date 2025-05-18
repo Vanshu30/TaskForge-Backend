@@ -9,6 +9,7 @@ import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +18,11 @@ import java.util.UUID;
 @Service
 public class PaymentService {
 
-    private static final String RAZORPAY_KEY = "api_key";
-    private static final String RAZORPAY_SECRET = "api_secret";
+    @Value("${razorpay.key}")
+    private String razorpayKey;
+
+    @Value("${razorpay.secret}")
+    private String razorpaySecret;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -28,14 +32,20 @@ public class PaymentService {
 
     @Transactional
     public String createOrder(UUID companyId, double amount) throws RazorpayException {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(()-> new ResourceNotFoundException("Company not found"));
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        }
 
-        RazorpayClient razorpayClient = new RazorpayClient(RAZORPAY_KEY, RAZORPAY_SECRET);
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Company not found"));
+
+        RazorpayClient razorpayClient = new RazorpayClient(razorpayKey, razorpaySecret);
 
         JSONObject orderRequest = new JSONObject();
-        orderRequest.put("amount", amount * 100);
+        orderRequest.put("amount", (int)(amount * 100)); // Razorpay requires amount in paise
         orderRequest.put("currency", "INR");
+        orderRequest.put("receipt", "txn_" + companyId);
+        orderRequest.put("payment_capture", 1); // Auto-capture
 
         Order order = razorpayClient.orders.create(orderRequest);
         return order.toString();

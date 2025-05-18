@@ -51,6 +51,10 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
     @Transactional(readOnly = true)
     public long getTasksCountLast7Days(UUID userId) {
         LocalDateTime lastWeek = LocalDateTime.now().minusDays(7);

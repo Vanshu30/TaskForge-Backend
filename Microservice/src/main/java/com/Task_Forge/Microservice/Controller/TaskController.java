@@ -16,11 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Optional;
-
-import java.util.UUID;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -107,6 +103,13 @@ public class TaskController {
         Map<String, Integer> result = taskService.getMonthlyCompletedTasksForLoggedInUser(user.get().getId());
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("")
+    public ResponseEntity<List<Task>> getAllTasks() {
+        List<Task> tasks = taskService.getAllTasks();
+        return ResponseEntity.ok(tasks);
+    }
+
 
 
 }

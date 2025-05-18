@@ -1,5 +1,6 @@
  package com.Task_Forge.Microservice.Service;
 
+import com.Task_Forge.Microservice.Entity.Task;
 import com.Task_Forge.Microservice.Entity.TaskActivity;
 import com.Task_Forge.Microservice.Repository.TaskActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ public class TaskServiceActivity {
 
     @Autowired
     TaskActivityRepository taskActivityRepository;
+
+
 
     public long getUpdatesInLast7Days(){
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
